@@ -1,33 +1,33 @@
 #include <NewPing.h>
 
-//MOTOR 1 (MOTOR A, LEFT WHEEL)
+//motor 1 (MOTOR A, LEFT WHEEL)
 #define ENA 7
 #define IN1 6
 #define IN2 5
 
-//MOTOR 2 (MOTOR B, RIGHT WHEEL)
+//motor 2 (MOTOR B, RIGHT WHEEL)
 #define ENB 2
 #define IN3 4
 #define IN4 3 
 
-//MOTOR SPEEDS
+//motor speeds
 #define MIN_SPEED 130
 #define MAX_SPEED 255
 
-//FRONT SENSOR
+//front sensor pins
 #define TRIGF 8
 #define ECHOF 9
 
-//LEFT SENSOR
+//left sensor pins
 #define TRIGL 10 
 #define ECHOL 11
 
-//RIGHT SENSOR
+//right sensor pins
 #define TRIGR 12
 #define ECHOR 13
 
 //sensor variables
-#define OBJ_DIST 18 //distance obj is detected (inches)
+#define OBJ_DIST 18   //distance obj is detected (inches)
 #define MAX_DIST 500  //max dist sensors can see (centimeters)
 
 //sensors
@@ -139,6 +139,7 @@ void runCar() {
         //save L and R sensor distances, then state transition
         L_sensor_dist = L_sensor.ping_in();
         R_sensor_dist = R_sensor.ping_in();
+        stopCar();
         State = DRIVE_BACKWARD;
       }
       break;
@@ -148,22 +149,22 @@ void runCar() {
       //stop driving backwards after this distance
       if (L_sensor.ping_in() >= L_sensor_dist + (OBJ_DIST/2)) {
 
-        //see which direction has more space to turn the vehicle
-        if (L_detected || (F_detected && L_detected)) {
-          State = TURN_RIGHT;
-        }
-        else if (R_detected || (F_detected && R_detected)) {
-          State = TURN_RIGHT;
-        }
-        else if (F_detected || (L_detected && R_detected) || (F_detected && L_detected && R_detected)) {
-          if (R_sensor_dist <= L_sensor_dist) {
-            State = TURN_RIGHT;
-          }
-          else if (L_sensor_dist < R_sensor_dist) {
-            State = TURN_LEFT;
-          }
-        }
-      }
+       //see which direction has more space to turn the vehicle
+       if (L_detected || (F_detected && L_detected)) {
+         State = TURN_RIGHT;
+       }
+       else if (R_detected || (F_detected && R_detected)) {
+         State = TURN_RIGHT;
+       }
+       else if (F_detected || (L_detected && R_detected) || (F_detected && L_detected && R_detected)) {
+         if (R_sensor_dist <= L_sensor_dist) {
+           State = TURN_RIGHT;
+         }
+         else if (L_sensor_dist < R_sensor_dist) {
+           State = TURN_LEFT;
+         }
+       }
+     }
       break;
     case TURN_LEFT:
       turnLeft();
