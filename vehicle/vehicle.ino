@@ -26,14 +26,14 @@
 #define TRIGR 12
 #define ECHOR 13
 
-//DISTANCE THAT OBJECT IS DETECTED (inches)
-#define OBJ_DIST 18
+//sensor variables
+#define OBJ_DIST 18 //distance obj is detected (inches)
+#define MAX_DIST 500  //max dist sensors can see (centimeters)
 
 //sensors
-NewPing F_sensor(TRIGF, ECHOF, OBJ_DIST);
-NewPing L_sensor(TRIGL, ECHOL, OBJ_DIST);
-NewPing R_sensor(TRIGR, ECHOR, OBJ_DIST);
-
+NewPing F_sensor(TRIGF, ECHOF, MAX_DIST);
+NewPing L_sensor(TRIGL, ECHOL, MAX_DIST);
+NewPing R_sensor(TRIGR, ECHOR, MAX_DIST);
 
 //States
 int State = 0;
@@ -44,6 +44,7 @@ enum {
   TURN_RIGHT = 3
 };
 
+//sees if sensors detected anything
 bool F_detected = false;
 bool L_detected = false;
 bool R_detected = false;
@@ -109,9 +110,9 @@ void turnRight() {
 
 //checks if object detected in a specified sensor
 bool checkObject(String sensor) {
-  bool F_detected = false;
-  bool L_detected = false;
-  bool R_detected = false;
+  F_detected = false;
+  L_detected = false;
+  R_detected = false;
   if (L_sensor.ping_in() <= OBJ_DIST) {
     L_detected = true;
     return true;
@@ -126,7 +127,6 @@ bool checkObject(String sensor) {
   }
   return false;
 }
-
 
 //State machine function
 void runCar() {
@@ -207,5 +207,5 @@ void setup() {
 }
 
 void loop() {
-  //runCar();
+  runCar();
 }
