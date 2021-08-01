@@ -49,6 +49,7 @@ bool F_detected = false;
 bool L_detected = false;
 bool R_detected = false;
 
+//drives vehicle forward
 void driveForward() {
   //motor A (left wheel forward)
   analogWrite(ENA, MIN_SPEED);
@@ -61,6 +62,7 @@ void driveForward() {
   digitalWrite(IN4, LOW);
 }
 
+//drives vehicle backward
 void driveBackward() {
   //motor A (left wheel reverse)
   analogWrite(ENA, MIN_SPEED);
@@ -73,6 +75,7 @@ void driveBackward() {
   digitalWrite(IN4, HIGH);
 }
 
+//stop vehicle
 void stopCar() {
   analogWrite(ENA, 0);
   analogWrite(ENB, 0);
@@ -140,7 +143,6 @@ void runCar() {
       break;
     case DRIVE_BACKWARD:
       driveBackward();
-      
       //stop driving backwards after this distance
       if (F_sensor.ping_in() >= 1.5 * OBJ_DIST) {
         stopCar();
