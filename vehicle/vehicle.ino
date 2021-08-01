@@ -109,7 +109,7 @@ void turnRight() {
 }
 
 //checks if object detected in a specified sensor
-bool checkObject(String sensor) {
+bool checkObject() {
   F_detected = false;
   L_detected = false;
   R_detected = false;
@@ -130,15 +130,10 @@ bool checkObject(String sensor) {
 
 //State machine function
 void runCar() {
-  double L_sensor_dist;
-  double R_sensor_dist;
   switch (State) {
     case DRIVE_FORWARD:
       driveForward();
       if (checkObject()) {
-        //save L and R sensor distances, then state transition
-        L_sensor_dist = L_sensor.ping_in();
-        R_sensor_dist = R_sensor.ping_in();
         stopCar();
         State = DRIVE_BACKWARD;
       }
@@ -147,24 +142,16 @@ void runCar() {
       driveBackward();
       
       //stop driving backwards after this distance
-      if (L_sensor.ping_in() >= L_sensor_dist + (OBJ_DIST/2)) {
-
-       //see which direction has more space to turn the vehicle
-       if (L_detected || (F_detected && L_detected)) {
+      if (F_sensor.ping_in() >= 1.5 * OBJ_DIST) {
+        stopCar();
+       //decide whether to turn left or right
+       if (!L_detected&&R_detected) {
+         State = TURN_LEFT;
+       }
+       else if ( (!F_detected&&L_detected) || (F_detected&&!L_detected&&!R_detected) || (F_detected&&L_detected) ) {
          State = TURN_RIGHT;
        }
-       else if (R_detected || (F_detected && R_detected)) {
-         State = TURN_RIGHT;
-       }
-       else if (F_detected || (L_detected && R_detected) || (F_detected && L_detected && R_detected)) {
-         if (R_sensor_dist <= L_sensor_dist) {
-           State = TURN_RIGHT;
-         }
-         else if (L_sensor_dist < R_sensor_dist) {
-           State = TURN_LEFT;
-         }
-       }
-     }
+      }
       break;
     case TURN_LEFT:
       turnLeft();
@@ -174,7 +161,7 @@ void runCar() {
       break;
     case TURN_RIGHT:
       turnRight();
-      if (!checkObject)) {
+      if (!checkObject()) {
         State = DRIVE_FORWARD;
       }
       break;
@@ -201,6 +188,8 @@ void setup() {
   pinMode(TRIGL, OUTPUT);
 
   //initlialize motors
+  analogWrite(ENA, LOW);
+  analogWrite(ENB, LOW);
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, LOW);
