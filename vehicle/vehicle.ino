@@ -146,14 +146,14 @@ void runCar() {
       //stop driving backwards after this distance
       if (F_sensor.ping_in() >= 1.5 * OBJ_DIST) {
         stopCar();
-       //decide whether to turn left or right
-       if (!L_detected&&R_detected) {
-         State = TURN_LEFT;
-       }
-       else if ( (!F_detected&&L_detected) || (F_detected&&!L_detected&&!R_detected) || (F_detected&&L_detected) ) {
-         State = TURN_RIGHT;
-       }
-      }
+        //decide whether to turn left or right
+        if (!L_detected&&R_detected) {
+           State = TURN_LEFT;
+         }
+         else if ( (F_detected&&!R_detected) || (L_detected&&R_detected) || (L_detected&&!F_detected) ) {
+          State = TURN_RIGHT;
+         }
+        }
       break;
     case TURN_LEFT:
       turnLeft();
