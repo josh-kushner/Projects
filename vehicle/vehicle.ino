@@ -26,7 +26,7 @@
 #define TRIGR 12
 #define ECHOR 13
 
-//sensor variables
+//sensor defines
 #define OBJ_DIST 18   //distance obj is detected (inches)
 #define MAX_DIST 500  //max dist sensors can see (centimeters)
 
@@ -44,7 +44,7 @@ enum {
   TURN_RIGHT = 3
 };
 
-//sees if sensors detected anything
+//sensor booleans
 bool F_detected = false;
 bool L_detected = false;
 bool R_detected = false;
@@ -108,7 +108,7 @@ void turnRight() {
   digitalWrite(IN4, HIGH);
 }
 
-//checks if object detected in a specified sensor
+//checks if object detected
 bool checkObject() {
   F_detected = false;
   L_detected = false;
@@ -187,7 +187,7 @@ void setup() {
   pinMode(TRIGR, OUTPUT);
   pinMode(TRIGL, OUTPUT);
 
-  //initlialize motors
+  //initialize motors
   analogWrite(ENA, 0);
   analogWrite(ENB, 0);
   digitalWrite(IN1, LOW);
